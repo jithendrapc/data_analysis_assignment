@@ -1,0 +1,89 @@
+# Import necessary libraries
+import yfinance as yf
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+import matplotlib.pyplot as plt
+
+# ---- Question 1: Extract Tesla Stock Data Using yfinance ----
+# Fetch Tesla stock data
+tesla = yf.Ticker("TSLA")
+tesla_data = tesla.history(period="max")
+
+# Reset the index and save the DataFrame
+tesla_data = tesla_data.reset_index()
+tesla_data.to_csv("tesla_data.csv", index=False)
+
+# Display the first five rows
+print(tesla_data.head())
+
+# ---- Question 2: Extract Tesla Revenue Data Using Webscraping ----
+# Define the URL for Tesla's revenue page
+url_tesla_revenue = 'https://www.macrotrends.net/stocks/charts/TSLA/tesla/revenue'
+
+# Fetch the page
+response_tesla = requests.get(url_tesla_revenue)
+soup_tesla = BeautifulSoup(response_tesla.content, 'html.parser')
+
+# Extract revenue data
+table_tesla = soup_tesla.find('table', {'class': 'historical_data_table'})
+tesla_revenue = pd.read_html(str(table_tesla))[0]
+
+# Display the last five rows
+print(tesla_revenue.tail())
+
+# ---- Question 3: Extract GameStop Stock Data Using yfinance ----
+# Fetch GameStop stock data
+gamestop = yf.Ticker("GME")
+gme_data = gamestop.history(period="max")
+
+# Reset the index and save the DataFrame
+gme_data = gme_data.reset_index()
+gme_data.to_csv("gme_data.csv", index=False)
+
+# Display the first five rows
+print(gme_data.head())
+
+# ---- Question 4: Extract GameStop Revenue Data Using Webscraping ----
+# Define the URL for GameStop's revenue page
+url_gme_revenue = 'https://www.macrotrends.net/stocks/charts/GME/gamestop/revenue'
+
+# Fetch the page
+response_gme = requests.get(url_gme_revenue)
+soup_gme = BeautifulSoup(response_gme.content, 'html.parser')
+
+# Extract revenue data
+table_gme = soup_gme.find('table', {'class': 'historical_data_table'})
+gme_revenue = pd.read_html(str(table_gme))[0]
+
+# Display the last five rows
+print(gme_revenue.tail())
+
+# ---- Question 5: Plot Tesla Stock Graph ----
+# Plot Tesla stock price
+plt.figure(figsize=(14, 7))
+plt.plot(tesla_data['Date'], tesla_data['Close'], label='Tesla Stock Price', color='blue')
+
+plt.title('Tesla Stock Price Over Time')
+plt.xlabel('Date')
+plt.ylabel('Price')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# ---- Question 6: Plot GameStop Stock Graph ----
+# Plot GameStop stock price
+plt.figure(figsize=(14, 7))
+plt.plot(gme_data['Date'], gme_data['Close'], label='GameStop Stock Price', color='blue')
+
+plt.title('GameStop Stock Price Over Time')
+plt.xlabel('Date')
+plt.ylabel('Price')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# ---- Question 7: Add GitHub URL ----
+# Paste the URL to your GitHub repository or shared notebook here
+github_url = 'https://github.com/yourusername/your-repo'  # Replace with your actual URL
+print(f"GitHub URL: {github_url}")
